@@ -48,6 +48,9 @@ export default {
   border: none;
   border-radius: 3px;
   text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+  border: none;
 }
 
 .btnIcon {

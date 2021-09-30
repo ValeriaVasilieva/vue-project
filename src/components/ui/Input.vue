@@ -1,11 +1,14 @@
 <template>
-  <input
-    :style="style"
-    :type="type"
-    :placeholder="placeholder"
-    :value="value"
-    @input="$emit('input', $event.target.value)"
-  />
+  <label>
+    {{ label }}
+    <input
+      :style="style"
+      :type="type"
+      :placeholder="placeholder"
+      :value="value"
+      @input="$emit('input', $event.target.value)"
+    />
+  </label>
 </template>
 
 <script>
@@ -21,8 +24,9 @@ export default {
     value: String,
     width: {
       type: String,
-      default: "100%",
+      default: "300px",
     },
+    label: String,
   },
   computed: {
     style() {
@@ -33,9 +37,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+label {
+  text-align: left;
+}
 input {
   margin: 15px 0;
   padding: 10px;
   box-sizing: border-box;
+  box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
+  border: none;
 }
 </style>
