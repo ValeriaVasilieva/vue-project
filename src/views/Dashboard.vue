@@ -13,7 +13,7 @@ import Layout from "@/components/Layout";
 import { mapActions } from "vuex";
 
 export default {
-  name: "Home",
+  name: "Dashboard",
   components: {
     PaymentsDisplay,
     AddPaymentForm,

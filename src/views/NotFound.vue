@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <h1>Code by Valeria Vasilieva</h1>
+    <h1>Error path: 404</h1>
   </Layout>
 </template>
 
@@ -8,7 +8,7 @@
 import Layout from "@/components/Layout";
 
 export default {
-  name: "About",
+  name: "NotFound",
   components: {
     Layout,
   },

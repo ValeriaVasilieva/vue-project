@@ -10,7 +10,8 @@
     <div v-show="show" class="form">
       <label>
         Payment Discription
-        <select class="select" v-model="type">
+        <input class="select" type="text" list="category" v-model="type" />
+        <datalist id="category">
           <option
             v-for="(option, idx) in getCategoriesList"
             :value="option"
@@ -18,7 +19,7 @@
           >
             {{ option }}
           </option>
-        </select>
+        </datalist>
       </label>
       <Input type="number" v-model="amount" label="Payment Amount, $" />
       <Input type="date" v-model="date" label="Payment Date" />
@@ -105,6 +106,13 @@ export default {
   mounted() {
     if (!this.getCategoriesList.length) {
       this.fetchCategories();
+    }
+  },
+  created() {
+    if (this.$route.path.split("/")[1] === "add") {
+      this.type = this.$route.params.category || "";
+      this.amount = +this.$route.query.value || "";
+      this.show = true;
     }
   },
 };
