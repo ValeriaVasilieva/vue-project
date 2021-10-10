@@ -1,20 +1,51 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Dashboard</router-link>
-      |
+      <router-link to="/">Dashboard</router-link> |
       <router-link to="/about">About</router-link>
     </div>
     <router-view />
+    <transition name="fade">
+      <ModalWindowAddPaymentForm
+        v-if="isWindowOpen"
+        :settings="modalSettings"
+      />
+    </transition>
+    <transition name="fade">
+      <context-menu />
+    </transition>
   </div>
 </template>
 
 <script>
+import ModalWindowAddPaymentForm from "@/components/entity/ModalWindowAddPaymentForm.vue";
+import ContextMenu from "@/components/entity/ContextMenu.vue";
+// import axios from "axios";
+
 export default {
   name: "App",
+  data: () => ({
+    isWindowOpen: false,
+    modalSettings: {},
+  }),
   // created() {
   //   this.$router.push("dashboard");
   // },
+  components: { ModalWindowAddPaymentForm, ContextMenu },
+  methods: {
+    onShown(settings) {
+      this.modalSettings = settings;
+      this.isWindowOpen = true;
+    },
+    onHide() {
+      this.isWindowOpen = false;
+    },
+  },
+  mounted() {
+    // axios.get("/api/paymentlist").then((res) => console.log(res));
+    this.$modal.EventBus.$on("shown", this.onShown);
+    this.$modal.EventBus.$on("hide", this.onHide);
+  },
 };
 </script>
 
@@ -38,5 +69,13 @@ export default {
       color: #42b983;
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -23,6 +23,12 @@
         <p>{{ item.date }}</p>
         <p>{{ item.category }}</p>
         <p>{{ item.amount }}$</p>
+        <div class="edit">
+          <button
+            class="edit-menu"
+            @click="onClickContextItem($event, item)"
+          ></button>
+        </div>
       </div>
     </div>
     <div class="pagination">
@@ -42,6 +48,13 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
+  name: "PaymentsDisplay",
+  components: {},
+  data() {
+    return {
+      isEditMenuOpen: Number,
+    };
+  },
   computed: {
     ...mapGetters({
       paymentsList: "getPaymentsList",
@@ -61,6 +74,28 @@ export default {
       const page = `${"page" + e.target.textContent}`.split(" ").join("");
       this.fetchListData(page);
     },
+    onClickContextItem(event, item) {
+      const items = [
+        {
+          text: "Edit",
+          action: () => {
+            console.log("edit", item);
+          },
+        },
+        {
+          text: "Remove",
+          action: () => {
+            this.actionDelete(item.id);
+          },
+        },
+      ];
+      this.$context.show({ event, items });
+    },
+    actionDelete(id) {
+      console.log(id);
+      // mutation deleteItem
+      this.$context.close();
+    },
   },
 };
 </script>
@@ -72,7 +107,7 @@ export default {
 .payment {
   width: 490px;
   display: grid;
-  grid-template-columns: 40px repeat(3, 150px);
+  grid-template-columns: 40px repeat(3, 150px) 20px;
   grid-template-rows: auto;
   text-align: left;
   border-bottom: 1px solid lightgray;
@@ -100,6 +135,20 @@ export default {
   margin: 10px 0;
   &:hover {
     color: #008b8b;
+  }
+}
+.edit {
+  position: relative;
+}
+.edit-menu {
+  margin-left: -30px;
+  padding-top: 15px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  &:after {
+    content: "\FE19";
+    font-size: 20px;
   }
 }
 </style>

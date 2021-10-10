@@ -1,6 +1,6 @@
 <template>
   <div :style="style">
-    <button :class="hasIcon" @click="handleClick">{{ text }}</button>
+    <button :class="hasIcon" @click="handleClick">{{ title }}</button>
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 export default {
   name: "Button",
   props: {
-    text: {
+    title: {
       type: String,
       default: "Click Me",
     },
@@ -17,6 +17,7 @@ export default {
       default: "150px",
     },
     icon: Boolean,
+    cancelIcon: Boolean,
   },
   computed: {
     style() {
@@ -25,6 +26,8 @@ export default {
     hasIcon() {
       if (this.icon) {
         return "btnIcon btn";
+      } else if (this.cancelIcon) {
+        return "btnCancel btn";
       } else {
         return "btn";
       }
@@ -52,7 +55,18 @@ export default {
   box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
   border: none;
 }
-
+.btnCancel {
+  width: 40px;
+  background-color: white;
+  box-shadow: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  &:after {
+    content: "\2718";
+    color: #008b8b;
+  }
+}
 .btnIcon {
   &:after {
     content: "+";

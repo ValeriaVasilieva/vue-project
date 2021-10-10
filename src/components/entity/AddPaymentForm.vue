@@ -1,13 +1,6 @@
 <template>
-  <div class="content">
-    <Button
-      icon
-      width="300px"
-      text="Add new cost"
-      @onClick="show = !show"
-      v-show="!show"
-    />
-    <div v-show="show" class="form">
+  <div class="contentPaymentForm">
+    <div class="form">
       <label>
         Payment Discription
         <input class="select" type="text" list="category" v-model="type" />
@@ -23,21 +16,13 @@
       </label>
       <Input type="number" v-model="amount" label="Payment Amount, $" />
       <Input type="date" v-model="date" label="Payment Date" />
-      <div class="btns">
-        <Button
-          class="btn"
-          width="145px"
-          text="Cancel"
-          @onClick="onClickCloseForm"
-        />
-        <Button
-          icon
-          class="btn"
-          width="145px"
-          text="Add"
-          @onClick="onClickAddCost"
-        />
-      </div>
+      <Button
+        icon
+        class="btn"
+        width="100%"
+        title="Add"
+        @onClick="onClickAddCost"
+      />
       <ErrorMessage v-show="error" text="Fill in all the fields" />
     </div>
   </div>
@@ -50,6 +35,7 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 
 export default {
+  name: "AddPaymentForm",
   components: {
     Button,
     Input,
@@ -61,7 +47,6 @@ export default {
       type: "",
       date: "",
       id: "",
-      show: false,
       error: false,
     };
   },
@@ -93,14 +78,8 @@ export default {
               .join("/") || this.getCurrentDate,
         };
         this.addPayment(data);
+        this.$modal.hide();
       } else this.error = true;
-    },
-    onClickCloseForm() {
-      this.error = false;
-      this.amount = "";
-      this.type = "";
-      this.date = "";
-      this.show = false;
     },
   },
   mounted() {
@@ -112,14 +91,13 @@ export default {
     if (this.$route.path.split("/")[1] === "add") {
       this.type = this.$route.params.category || "";
       this.amount = +this.$route.query.value || "";
-      this.show = true;
     }
   },
 };
 </script>
 
 <style scoped lang="scss">
-.content {
+.contentPaymentForm {
   display: flex;
   flex-direction: column;
 }
@@ -129,11 +107,7 @@ export default {
   align-items: center;
   width: 300px;
 }
-.btns {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-}
+
 .select {
   margin: 15px 0;
   padding: 10px;
