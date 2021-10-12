@@ -18,10 +18,18 @@
       <Input type="date" v-model="date" label="Payment Date" />
       <Button
         icon
+        v-if="!Object.keys(this.getEditItem).length"
         class="btn"
         width="100%"
         title="Add"
         @onClick="onClickAddCost"
+      />
+      <Button
+        v-if="Object.keys(this.getEditItem).length"
+        class="btn"
+        width="100%"
+        title="Edit"
+        @onClick="onClickEditCost"
       />
       <ErrorMessage v-show="error" text="Fill in all the fields" />
     </div>
@@ -51,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getCategoriesList"]),
+    ...mapGetters(["getCategoriesList", "getEditItem"]),
     getCurrentDate() {
       const today = new Date();
       const day = today.getDate();
@@ -63,8 +71,13 @@ export default {
   methods: {
     ...mapMutations({
       addPayment: "addDataToPaymentsList",
+      clearEditItem: "clearEditItem",
     }),
-    ...mapActions({ fetchCategories: "loadCategories" }),
+    ...mapActions({
+      fetchCategories: "loadCategories",
+      addNewPayment: "addPayment",
+      editPayment: "editPayment",
+    }),
     onClickAddCost() {
       if (this.amount && this.type) {
         this.error = false;
@@ -77,20 +90,41 @@ export default {
               .reverse()
               .join("/") || this.getCurrentDate,
         };
-        this.addPayment(data);
+        // this.addPayment(data);
+        this.addNewPayment(data);
         this.$modal.hide();
       } else this.error = true;
+    },
+    onClickEditCost() {
+      const editedItem = {
+        id: this.getEditItem.id,
+        amount: +this.amount,
+        category: this.type,
+        date:
+          this.date
+            .split("-")
+            .reverse()
+            .join("/") || this.getCurrentDate,
+      };
+      this.editPayment(editedItem);
+      this.$modal.hide();
+      this.clearEditItem();
     },
   },
   mounted() {
     if (!this.getCategoriesList.length) {
       this.fetchCategories();
     }
+    if (Object.keys(this.getEditItem).length) {
+      console.log(this.getEditItem);
+      this.amount = this.getEditItem.amount.toString();
+      this.type = this.getEditItem.category;
+    }
   },
   created() {
     if (this.$route.path.split("/")[1] === "add") {
       this.type = this.$route.params.category || "";
-      this.amount = +this.$route.query.value || "";
+      this.amount = this.$route.query.value || "";
     }
   },
 };

@@ -21,8 +21,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      fetchListData: "fetchData",
-      fetchData: "getPaymentList",
+      fetchPaymentList: "getPaymentListFromAPI",
     }),
     openModalPayment() {
       this.$modal.show({
@@ -32,8 +31,7 @@ export default {
     },
   },
   created() {
-    this.fetchListData("page1");
-    this.fetchData(2);
+    this.fetchPaymentList(1);
     if (this.$route.path.split("/")[1] === "add") {
       this.$modal.show({
         title: "Add Payment Form",

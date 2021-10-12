@@ -18,7 +18,11 @@
     </div>
     <p v-if="this.isLoading">...Loading</p>
     <div v-if="!this.isLoading">
-      <div class="payment" v-for="(item, idx) in paymentsList" :key="idx">
+      <div
+        class="payment"
+        v-for="(item, idx) in paymentsList[+page]"
+        :key="idx"
+      >
         <p>{{ item.id }}</p>
         <p>{{ item.date }}</p>
         <p>{{ item.category }}</p>
@@ -60,19 +64,24 @@ export default {
       paymentsList: "getPaymentsList",
       pages: "getPagesNumber",
       isLoading: "getLoading",
+      page: "getPage",
     }),
     getTotalCosts() {
       return this.$store.getters.getFullPaymentValue;
     },
   },
   methods: {
-    ...mapMutations(["setCurrentPage"]),
+    ...mapMutations(["setCurrentPage", "setPage", "setEditItem"]),
     ...mapActions({
-      fetchListData: "fetchData",
+      fetchListData: "getPaymentListFromAPI",
+      deletePayment: "deletePayment",
     }),
     handleChangePage(e) {
-      const page = `${"page" + e.target.textContent}`.split(" ").join("");
-      this.fetchListData(page);
+      if (this.paymentsList[+e.target.textContent]) {
+        this.setPage(+e.target.textContent);
+      } else {
+        this.fetchListData(+e.target.textContent);
+      }
     },
     onClickContextItem(event, item) {
       const items = [
@@ -80,20 +89,29 @@ export default {
           text: "Edit",
           action: () => {
             console.log("edit", item);
+            this.actionEdit(item);
           },
         },
         {
           text: "Remove",
           action: () => {
+            console.log(item.id);
             this.actionDelete(item.id);
           },
         },
       ];
       this.$context.show({ event, items });
     },
+    actionEdit(item) {
+      this.setEditItem(item);
+      this.$context.close();
+      this.$modal.show({
+        title: "Add Payment Form",
+        content: "AddPaymentForm",
+      });
+    },
     actionDelete(id) {
-      console.log(id);
-      // mutation deleteItem
+      this.deletePayment(id);
       this.$context.close();
     },
   },

@@ -12,7 +12,7 @@
       />
     </transition>
     <transition name="fade">
-      <context-menu />
+      <ContextMenu />
     </transition>
   </div>
 </template>
@@ -20,7 +20,6 @@
 <script>
 import ModalWindowAddPaymentForm from "@/components/entity/ModalWindowAddPaymentForm.vue";
 import ContextMenu from "@/components/entity/ContextMenu.vue";
-// import axios from "axios";
 
 export default {
   name: "App",
@@ -42,7 +41,6 @@ export default {
     },
   },
   mounted() {
-    // axios.get("/api/paymentlist").then((res) => console.log(res));
     this.$modal.EventBus.$on("shown", this.onShown);
     this.$modal.EventBus.$on("hide", this.onHide);
   },
