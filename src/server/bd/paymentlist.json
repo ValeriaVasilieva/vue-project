@@ -2,21 +2,21 @@
     "items": [
         {
             "id": 1,
-            "date": "13/10/2021",
-            "category": "Boyfriend",
-            "amount": 268
+            "date": "28/03/2020",
+            "category": "Food",
+            "amount": 169
         },
         {
             "id": 2,
-            "amount": 15,
+            "date": "13/10/2021",
             "category": "Transport",
-            "date": "11/10/2021"
+            "amount": 568
         },
         {
             "id": 3,
-            "date": "13/10/2021",
-            "category": "Home",
-            "amount": 43
+            "amount": 34,
+            "category": "Education",
+            "date": "13/10/2021"
         },
         {
             "id": 4,
@@ -27,8 +27,8 @@
         {
             "id": 5,
             "date": "24/03/2020",
-            "category": "Education",
-            "amount": 75
+            "category": "Books",
+            "amount": 586
         },
         {
             "id": 6,
@@ -38,9 +38,9 @@
         },
         {
             "id": 7,
-            "date": "28/03/2020",
-            "category": "Navigation",
-            "amount": 456
+            "date": "21/03/2020",
+            "category": "Sport",
+            "amount": 854
         },
         {
             "id": 8,
@@ -62,15 +62,15 @@
         },
         {
             "id": 11,
-            "date": "24/03/2020",
+            "date": "13/10/2021",
             "category": "Transport",
-            "amount": 569
+            "amount": 568
         },
         {
             "id": 12,
-            "amount": 50,
+            "date": "13/10/2021",
             "category": "Transport",
-            "date": "13/10/2021"
+            "amount": 568
         },
         {
             "id": 13,
@@ -79,6 +79,6 @@
             "date": "13/10/2021"
         }
     ],
-    "totalPages": 3,
-    "totalAmount": 3431
+    "totalCount": 13,
+    "totalAmount": 5302
 }

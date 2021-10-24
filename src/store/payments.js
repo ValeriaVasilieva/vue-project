@@ -5,18 +5,17 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    paymentsList: {},
+    paymentsList: [],
     categoriesList: [],
-    pages: 0,
-    page: 1,
+    totalCount: 0,
     editItem: {},
     totalAmount: 0,
     isFetchListLoading: false,
+    isDialogOpen: false,
   },
   mutations: {
     setPaymentsListData(state, payload) {
-      const items = state.paymentsList;
-      Object.assign(items, payload);
+      state.paymentsList = payload;
     },
     addDataToPaymentsList(state, payload) {
       state.paymentsList.push({ id: payload.id, ...payload });
@@ -26,7 +25,7 @@ export default new Vuex.Store({
       if (!Array.isArray(categories)) {
         categories = [categories];
       }
-      state.categoriesList.push(...categories);
+      state.categoriesList = categories;
     },
     toggleLoading(state, value) {
       state.isFetchListLoading = value;
@@ -34,11 +33,8 @@ export default new Vuex.Store({
     setTotalAmount(state, value) {
       state.totalAmount = value;
     },
-    setPages(state, value) {
-      state.pages = value;
-    },
-    setPage(state, value) {
-      state.page = value;
+    setTotalCount(state, value) {
+      state.totalCount = value;
     },
     clearList(state) {
       state.paymentsList = {};
@@ -49,29 +45,34 @@ export default new Vuex.Store({
     clearEditItem(state) {
       state.editItem = {};
     },
+    setIsDialogOpen(state, value) {
+      state.isDialogOpen = value;
+    },
   },
   getters: {
     getPaymentsList: (state) => state.paymentsList,
     getFullPaymentValue: (state) => state.totalAmount,
     getCategoriesList: (state) => state.categoriesList,
     getLoading: (state) => state.isFetchListLoading,
-    getPagesNumber: (state) => state.pages,
-    getPage: (state) => state.page,
+    getTotalCount: (state) => state.totalCount,
     getEditItem: (state) => state.editItem,
+    getIsDialogOpen: (state) => state.isDialogOpen,
   },
   actions: {
-    getPaymentListFromAPI({ commit }, page) {
+    getPaymentListFromAPI({ commit }, data) {
       commit("toggleLoading", true);
-      fetch(`http://localhost:3003/api/paymentlist?page=${page}`, {
-        headers: { "Content-Type": "application/json" },
-      })
+      fetch(
+        `http://localhost:3003/api/paymentlist?top=${data.top}&skip=${data.skip}`,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
         .then((response) => response.json())
         .then((jsondata) => {
           setTimeout(() => {
-            commit("setPaymentsListData", { [page]: jsondata.items });
-            commit("setPages", jsondata.totalPages);
+            commit("setPaymentsListData", jsondata.items);
+            commit("setTotalCount", jsondata.totalCount);
             commit("setTotalAmount", jsondata.totalAmount);
-            commit("setPage", page);
             commit("toggleLoading", false);
           }, 1000);
         });
@@ -86,31 +87,29 @@ export default new Vuex.Store({
         .then((response) => response.json())
         .then((res) => {
           if (res.result === 1) {
-            commit("clearList");
-            dispatch("getPaymentListFromAPI", 1);
-            dispatch("getPaymentListFromAPI", this.state.pages);
+            dispatch("getPaymentListFromAPI", { top: 5, skip: 0 });
             commit("toggleLoading", false);
           } else console.error("error");
         });
     },
-    editPayment({ commit, dispatch }, body) {
-      commit("toggleLoading", true);
-      fetch(`http://localhost:3003/api/paymentlist/${body.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      })
-        .then((response) => response.json())
-        .then((res) => {
-          if (res.result === 1) {
-            commit("clearList");
-            const curentPage = this.state.page;
-            this.state.page = 0;
-            dispatch("getPaymentListFromAPI", curentPage);
-            commit("toggleLoading", false);
-          } else console.error("error");
-        });
-    },
+    // editPayment({ commit, dispatch }, body) {
+    //   commit("toggleLoading", true);
+    //   fetch(`http://localhost:3003/api/paymentlist/${body.id}`, {
+    //     method: "PUT",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(body),
+    //   })
+    //     .then((response) => response.json())
+    //     .then((res) => {
+    //       if (res.result === 1) {
+    //         commit("clearList");
+    //         const curentPage = this.state.page;
+    //         this.state.page = 0;
+    //         dispatch("getPaymentListFromAPI", curentPage);
+    //         commit("toggleLoading", false);
+    //       } else console.error("error");
+    //     });
+    // },
     deletePayment({ commit, dispatch }, id) {
       fetch(`http://localhost:3003/api/paymentlist/${id}`, {
         method: "DELETE",
@@ -118,10 +117,7 @@ export default new Vuex.Store({
         .then((response) => response.json())
         .then((res) => {
           if (res.result === 1) {
-            commit("clearList");
-            const curentPage = this.state.page;
-            this.state.page = 0;
-            dispatch("getPaymentListFromAPI", curentPage);
+            dispatch("getPaymentListFromAPI", { top: 5, skip: 0 });
             commit("toggleLoading", false);
           } else console.error("error");
         });

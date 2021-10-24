@@ -1,43 +1,29 @@
 <template>
-  <Layout>
-    <h1 class="heading">My Personal Costs</h1>
-    <Button title="Add Payment" @onClick="openModalPayment" width="300px" />
-    <PaymentsDisplay />
-  </Layout>
+  <v-container>
+    <v-row>
+      <v-col>
+        <h1 class="text-h5 text-sm-h3 mb-8 mt-8">My Personal Costs</h1>
+        <AddPaymentDiolog />
+        <PaymentsDisplay />
+      </v-col>
+      <v-col class="mt-16">
+        <chart />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import PaymentsDisplay from "@/components/entity/PaymentsDisplay";
-import Layout from "@/components/Layout";
-import { mapActions } from "vuex";
-import Button from "@/components/ui/Button.vue";
+import AddPaymentDiolog from "../components/entity/AddPaymentDiolog.vue";
+import Chart from "../components/entity/Chart.vue";
 
 export default {
   name: "Dashboard",
   components: {
     PaymentsDisplay,
-    Layout,
-    Button,
-  },
-  methods: {
-    ...mapActions({
-      fetchPaymentList: "getPaymentListFromAPI",
-    }),
-    openModalPayment() {
-      this.$modal.show({
-        title: "Add Payment Form",
-        content: "AddPaymentForm",
-      });
-    },
-  },
-  created() {
-    this.fetchPaymentList(1);
-    if (this.$route.path.split("/")[1] === "add") {
-      this.$modal.show({
-        title: "Add Payment Form",
-        content: "AddPaymentForm",
-      });
-    }
+    AddPaymentDiolog,
+    Chart,
   },
 };
 </script>

@@ -20,16 +20,18 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/paymentlist", (req, res) => {
-  var page = +req.query.page;
+  var top = +req.query.top;
+  var skip = +req.query.skip;
   fs.readFile("src/server/bd/paymentlist.json", "utf-8", (err, data) => {
     if (err) {
       console.log(err);
       res.sendStatus(404, JSON.stringify({ result: 0, text: err }));
-    } else if (page) {
+    } else if (top !== undefined && skip !== undefined) {
+      const newItems = JSON.parse(data).items.slice(skip, top + skip);
       res.send(
         JSON.stringify({
-          items: JSON.parse(data).items.slice((page - 1) * 5, 5 * page),
-          totalPages: JSON.parse(data).totalPages,
+          items: newItems,
+          totalCount: JSON.parse(data).totalCount,
           totalAmount: JSON.parse(data).totalAmount,
         })
       );

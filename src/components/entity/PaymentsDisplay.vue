@@ -1,50 +1,25 @@
 <template>
-  <div class="content">
-    <div class="links">
-      <a class="regular" href="/add/Food?value=200">Add Food = 200$</a>
-      <a class="regular" href="/add/Transport?value=50">Add Transport = 50$</a>
-      <a class="regular" href="/add/Entertainment?value=2000"
-        >Add Entertainment = 2000$</a
-      >
-    </div>
+  <div>
     <p>
       <strong style="color: #008b8b">Total Costs:</strong> {{ getTotalCosts }}$
     </p>
-    <div class="payment table-header">
-      <p>#</p>
-      <p>Date</p>
-      <p>Category</p>
-      <p>Value</p>
-    </div>
-    <p v-if="this.isLoading">...Loading</p>
-    <div v-if="!this.isLoading">
-      <div
-        class="payment"
-        v-for="(item, idx) in paymentsList[+page]"
-        :key="idx"
-      >
-        <p>{{ item.id }}</p>
-        <p>{{ item.date }}</p>
-        <p>{{ item.category }}</p>
-        <p>{{ item.amount }}$</p>
-        <div class="edit">
-          <button
-            class="edit-menu"
-            @click="onClickContextItem($event, item)"
-          ></button>
-        </div>
-      </div>
-    </div>
-    <div class="pagination">
-      <button
-        class="pagination__button"
-        v-for="n in pages"
-        :key="n"
-        @click="handleChangePage"
-      >
-        {{ n }}
-      </button>
-    </div>
+    <v-data-table
+      :headers="headers"
+      :items="paymentsList"
+      class="elevation-1"
+      @update:page="handleChangePage"
+      @update:items-per-page="handleChangePage"
+      :item-page="1"
+      :options.sync="pagination"
+      :server-items-length="totalCount"
+      :loading="this.isLoading"
+    >
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon small @click="deleteItem(item)">
+          mdi-delete
+        </v-icon>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
@@ -57,12 +32,23 @@ export default {
   data() {
     return {
       isEditMenuOpen: Number,
+      headers: [
+        { text: "#", value: "id" },
+        { text: "Date", value: "date" },
+        { text: "Category", value: "category" },
+        { text: "Amount, $", value: "amount" },
+        { text: "", value: "actions", sortable: false },
+      ],
+      pagination: {
+        page: 1,
+        itemsPerPage: 5,
+      },
     };
   },
   computed: {
     ...mapGetters({
       paymentsList: "getPaymentsList",
-      pages: "getPagesNumber",
+      totalCount: "getTotalCount",
       isLoading: "getLoading",
       page: "getPage",
     }),
@@ -71,102 +57,29 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setCurrentPage", "setPage", "setEditItem"]),
+    ...mapMutations([
+      "setCurrentPage",
+      "setPage",
+      "setEditItem",
+      "setIsDialogOpen",
+    ]),
     ...mapActions({
       fetchListData: "getPaymentListFromAPI",
       deletePayment: "deletePayment",
     }),
-    handleChangePage(e) {
-      if (this.paymentsList[+e.target.textContent]) {
-        this.setPage(+e.target.textContent);
-      } else {
-        this.fetchListData(+e.target.textContent);
-      }
+    handleChangePage() {
+      const top = this.pagination.itemsPerPage;
+      const skip = (this.pagination.page - 1) * this.pagination.itemsPerPage;
+      this.fetchListData({ top, skip });
     },
-    onClickContextItem(event, item) {
-      const items = [
-        {
-          text: "Edit",
-          action: () => {
-            console.log("edit", item);
-            this.actionEdit(item);
-          },
-        },
-        {
-          text: "Remove",
-          action: () => {
-            console.log(item.id);
-            this.actionDelete(item.id);
-          },
-        },
-      ];
-      this.$context.show({ event, items });
+    deleteItem(item) {
+      this.deletePayment(item.id);
     },
-    actionEdit(item) {
-      this.setEditItem(item);
-      this.$context.close();
-      this.$modal.show({
-        title: "Add Payment Form",
-        content: "AddPaymentForm",
-      });
-    },
-    actionDelete(id) {
-      this.deletePayment(id);
-      this.$context.close();
-    },
+  },
+  created() {
+    this.fetchListData({ top: 5, skip: 0 });
   },
 };
 </script>
 
-<style scoped lang="scss">
-.content {
-  width: 500px;
-}
-.payment {
-  width: 490px;
-  display: grid;
-  grid-template-columns: 40px repeat(3, 150px) 20px;
-  grid-template-rows: auto;
-  text-align: left;
-  border-bottom: 1px solid lightgray;
-}
-.table-header {
-  font-weight: 700;
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  &__button {
-    width: 25px;
-    height: 25px;
-    margin: 15px 5px;
-    background-color: white;
-    border: none;
-    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-  }
-}
-.regular {
-  text-decoration: none;
-  color: black;
-  display: block;
-  margin: 10px 0;
-  &:hover {
-    color: #008b8b;
-  }
-}
-.edit {
-  position: relative;
-}
-.edit-menu {
-  margin-left: -30px;
-  padding-top: 15px;
-  border: none;
-  background-color: white;
-  cursor: pointer;
-  &:after {
-    content: "\FE19";
-    font-size: 20px;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

@@ -1,18 +1,16 @@
 <template>
-  <Layout>
+  <v-container>
     <h1>Code by Valeria Vasilieva</h1>
     <Button title="Auth" @onClick="openModelAuth" width="300px" />
-  </Layout>
+  </v-container>
 </template>
 
 <script>
-import Layout from "@/components/Layout";
 import Button from "@/components/ui/Button.vue";
 
 export default {
   name: "About",
   components: {
-    Layout,
     Button,
   },
   methods: {

@@ -1,17 +1,12 @@
 <template>
-  <Layout>
+  <v-container>
     <h1>Error path: 404</h1>
-  </Layout>
+  </v-container>
 </template>
 
 <script>
-import Layout from "@/components/Layout";
-
 export default {
   name: "NotFound",
-  components: {
-    Layout,
-  },
 };
 </script>
 
