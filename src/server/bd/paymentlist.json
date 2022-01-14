@@ -1,0 +1,84 @@
+{
+    "items": [
+        {
+            "id": 1,
+            "date": "28/03/2020",
+            "category": "Food",
+            "amount": 169
+        },
+        {
+            "id": 2,
+            "date": "13/10/2021",
+            "category": "Transport",
+            "amount": 568
+        },
+        {
+            "id": 3,
+            "amount": 34,
+            "category": "Education",
+            "date": "13/10/2021"
+        },
+        {
+            "id": 4,
+            "date": "13/10/2021",
+            "category": "Nails",
+            "amount": 54
+        },
+        {
+            "id": 5,
+            "date": "24/03/2020",
+            "category": "Books",
+            "amount": 586
+        },
+        {
+            "id": 6,
+            "date": "21/03/2020",
+            "category": "Sport",
+            "amount": 854
+        },
+        {
+            "id": 7,
+            "date": "21/03/2020",
+            "category": "Sport",
+            "amount": 854
+        },
+        {
+            "id": 8,
+            "date": "24/03/2020",
+            "category": "Books",
+            "amount": 586
+        },
+        {
+            "id": 9,
+            "date": "12/10/2021",
+            "category": "Boyfriend",
+            "amount": 258
+        },
+        {
+            "id": 10,
+            "date": "28/03/2020",
+            "category": "Food",
+            "amount": 169
+        },
+        {
+            "id": 11,
+            "date": "13/10/2021",
+            "category": "Transport",
+            "amount": 568
+        },
+        {
+            "id": 12,
+            "date": "13/10/2021",
+            "category": "Transport",
+            "amount": 568
+        },
+        {
+            "id": 13,
+            "amount": 34,
+            "category": "Education",
+            "date": "13/10/2021"
+        }
+    ],
+    "totalCount": 13,
+    "totalAmount": 5302
+}
