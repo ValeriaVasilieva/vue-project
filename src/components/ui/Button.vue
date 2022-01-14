@@ -25,6 +25,7 @@ export default {
       return `width: ${this.width}`
     },
     hasIcon() {
+      console.log("b")
       if (this.icon) {
         return "btnIcon btn"
       } else if (this.cancelIcon) {
