@@ -21,24 +21,25 @@ export default {
   },
   computed: {
     style() {
-      return `width: ${this.width}`;
+      console.log("a")
+      return `width: ${this.width}`
     },
     hasIcon() {
       if (this.icon) {
-        return "btnIcon btn";
+        return "btnIcon btn"
       } else if (this.cancelIcon) {
-        return "btnCancel btn";
+        return "btnCancel btn"
       } else {
-        return "btn";
+        return "btn"
       }
     },
   },
   methods: {
     handleClick() {
-      this.$emit("onClick");
+      this.$emit("onClick")
     },
   },
-};
+}
 </script>
 
 <style scoped lang="scss">
